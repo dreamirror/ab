@@ -153,7 +153,7 @@ namespace DigiSky.AssetBundleKit
         {
             // 加载并初始化Manifest包
             Debug.Log("InitManifest AssetBundles");
-            m_assetBundleManifest = LoadSingleAsset<AssetBundleManifest>("", "assetbundles", "AssetBundleManifest");
+            m_assetBundleManifest = LoadSingleAsset<AssetBundleManifest>("Assets/StreamingAssets/assetbundles/", "assetbundles", "AssetBundleManifest");
         }
 
         //
@@ -538,7 +538,7 @@ namespace DigiSky.AssetBundleKit
         /// <param name="assetName"></param>
         /// <param name="specialAssetName"></param>
         /// <returns></returns>
-        private UnityEngine.Object _LoadSingleAssetInternal(string strPath, string assetName, string specialAssetName = null)
+        public UnityEngine.Object _LoadSingleAssetInternal(string strPath, string assetName, string specialAssetName = null)
         {
             // strPath不判断长度，允许为长度为0
             if (strPath != null
