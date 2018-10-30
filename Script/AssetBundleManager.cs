@@ -538,7 +538,7 @@ namespace DigiSky.AssetBundleKit
         /// <param name="assetName"></param>
         /// <param name="specialAssetName"></param>
         /// <returns></returns>
-        public UnityEngine.Object _LoadSingleAssetInternal(string strPath, string assetName, string specialAssetName = null)
+        private UnityEngine.Object _LoadSingleAssetInternal(string strPath, string assetName, string specialAssetName = null)
         {
             // strPath不判断长度，允许为长度为0
             if (strPath != null

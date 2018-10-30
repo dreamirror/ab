@@ -55,7 +55,7 @@ namespace DigiSky.AssetBundleKit
         /// <summary>
         /// 是否开启版本检查
         /// </summary>
-        public static bool CheckNewVersion = false;
+        public static bool CheckNewVersion = true;
 
         /// <summary>
         /// 所有协程句柄
@@ -286,7 +286,7 @@ namespace DigiSky.AssetBundleKit
         {
             WWW download = null;
             string url = m_strBaseDownloadingURL + strABName;
-
+            Debug.Log(url);
             download = new WWW(url);
             yield return download;
 

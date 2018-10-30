@@ -24,10 +24,20 @@ public class Main : MonoBehaviour {
         image.sprite = sp;
     }
 
+    public void update_call(bool success) {
+        if (success)
+        {
+            Debug.Log("update success!!!");
+        }
+        else {
+            Debug.LogWarning("update failed!!!");
+        }
+    }
+
     private void Awake()
     {
         // 创建GameObject对象                 
-
+        
         GameObject gameObj = GameObject.Find("Image");
         image = gameObj.GetComponent<Image>();
         if (image != null) {
@@ -36,9 +46,20 @@ public class Main : MonoBehaviour {
         System.Action<Object> calls = Call_back;
         AssetBundleManager.Initialization();
         AssetBundleManager mgr = AssetBundleManager.GetSingel();
+        mgr.itfDownloadPath = Application.persistentDataPath;
         mgr.InitManifest();
-        mgr.LoadAssetAsyc("Assets/StreamingAssets/assetbundles/pic/bg/","1", calls);
+        // mgr.LoadAssetAsyc("Assets/StreamingAssets/assetbundles/pic/bg/","1", calls);
         //UnityEngine.Object pic = mgr._LoadSingleAssetInternal("Assets/StreamingAssets/assetbundles/pic/","2.jpg");
+
+
+        //AB下载测试
+        AssetBundleInfoManager.Initialization();
+        AssetBundleInfoManager info = AssetBundleInfoManager.GetSingel();
+        AssetBundleDownloader.Initialization();
+        AssetBundleDownloader downloader = AssetBundleDownloader.GetSingel();
+        downloader.SetSourceAssetBundleURL("http://192.168.101.57/F%3A/filesserver/assetbundles/");
+        System.Action<bool> call = update_call;
+        downloader.CheckUpdate(call);
     }
 
 
