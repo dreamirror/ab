@@ -71,11 +71,16 @@ namespace DigiSky.AssetBundleKit
         /// <param name="buffer"></param>
         private void _Analysis(byte[] buffer)
         {
+            
             if (buffer == null
                 || buffer.Length == 0)
             {
                 Debug.LogWarning("buffer can not be null!");
                 return;
+            }
+            bool isCache = IsCached("bundleinfo");
+            if (isCache) {
+                Debug.LogWarning("IS CACHEED");
             }
 
             Stream temp = new MemoryStream(buffer);
@@ -221,11 +226,11 @@ namespace DigiSky.AssetBundleKit
                 {
                     tagBundleInfo bundleInfo = new tagBundleInfo();
                     bundleInfo.Init(text.bytes);
-
+                    assetBundle.Unload(true);
                     return bundleInfo;
                 }
             }
-
+            
             Debug.LogError("加载bundleInfo失败，path：" + strPath);
             return null;
         }

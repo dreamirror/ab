@@ -301,12 +301,34 @@ namespace DigiSky.AssetBundleKit
             {
                 if (isBundleInfoFile == true
                     && AssetBundleInfoManager.IsExits())
-                    m_serverBundleInfo = AssetBundleInfoManager.GetSingel().LoadBundleInfo(download.bytes);
+                {
+                    //解决乱码问题将下载的bundleinfo 字节流按照assetbundle的方式加载 而不是直接使用字节流
+                    AssetBundle.UnloadAllAssetBundles(false); //这里是因为在某个地方已经加载了本地的bundleinfo ，如果不释放掉就不能加载刚刚下下来的这个buffer（暂时还没找到）
+                    AssetBundle bundleinfo = AssetBundle.LoadFromMemory(download.bytes);
+                   // AssetBundle bundleinfo = bundleinfoRe.assetBundle;
+                    if (bundleinfo != null)
+                    {
+                        TextAsset text = bundleinfo.LoadAsset<TextAsset>("bundleinfo");
+                        if (text != null)
+                        {
+                            m_serverBundleInfo = AssetBundleInfoManager.GetSingel().LoadBundleInfo(text.bytes);
+                        }
+                    }
+                    bundleinfo.Unload(true);
+                    // _SaveFile(strABName, download.bytes);
+
+                }
+
+                //如果是bundleinfo的话不应该是直接用字节流去读取数据因为这个字节流是元始的喂解密的bundle字节流
+                // _SaveServerInfoAndLoad(strABName, download.bytes);
+                
                 else
                     _SaveFile(strABName, download.bytes);
 
                 //包加载成功立即卸载，只需要缓存到本地即可
-                download.assetBundle.Unload(false);
+                if (download.assetBundle != null) {
+                    download.assetBundle.Unload(false);
+                }
                 Debug.Log("download " + strABName + " bundle succeed!");
             }
             else
@@ -355,6 +377,15 @@ namespace DigiSky.AssetBundleKit
             Debug.Log("Save BundleInfo success!");
         }
         #endregion
+
+
+        /// <summary>
+        //保存服务器下载的bundleinfo并且加载
+        /// </summary>
+        /// 
+        private void _SaveServerInfoAndLoad(string strFileName, byte[] arrBuffer) {
+            _SaveFile(strFileName + "server", arrBuffer);
+        }
 
         /// <summary>
         /// 停止所有协程
